@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Document {
+  id Int @id @default(autoincrement())
+  title String
+  rawText String
+  createdAt DateTime @default(now())
+  chunks TextChunk[]
+  nodes Node[]
+  embedding  Unsupported("vector(768)")?
+}
+
+model TextChunk {
+  id Int @id @default(autoincrement())
+  document Document @relation(fields: [documentId], references: [id])
+  documentId Int
+  text String
+  aiSummary String?
+  embedding Unsupported("vector(768)")
+}
+
+model Node {
+  id Int @id @default(autoincrement())
+  document Document @relation(fields: [documentId], references: [id])
+  documentId Int
+  label String
+  summary String?
+  embedding Unsupported("vector(768)")?
+  edgesFrom Edge[] @relation("EdgeFrom")
+  edgesTo Edge[] @relation("EdgeTo")
+}
+
+model Edge {
+  id Int @id @default(autoincrement())
+  fromNode Node @relation("EdgeFrom", fields: [fromNodeId], references: [id])
+  fromNodeId Int
+  toNode Node @relation("EdgeTo", fields: [toNodeId], references: [id])
+  toNodeId Int
+  relationship String?
+  weight Float?
+}
