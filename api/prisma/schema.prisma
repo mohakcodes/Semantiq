@@ -13,7 +13,7 @@ model Document {
   createdAt DateTime @default(now())
   chunks TextChunk[]
   nodes Node[]
-  embedding  Unsupported("vector(768)")?
+  embedding  Unsupported("vector(384)")?
 }
 
 model TextChunk {
@@ -22,7 +22,7 @@ model TextChunk {
   documentId Int
   text String
   aiSummary String?
-  embedding Unsupported("vector(768)")
+  embedding Unsupported("vector(384)")
 }
 
 model Node {
@@ -31,7 +31,7 @@ model Node {
   documentId Int
   label String
   summary String?
-  embedding Unsupported("vector(768)")?
+  embedding Unsupported("vector(384)")?
   edgesFrom Edge[] @relation("EdgeFrom")
   edgesTo Edge[] @relation("EdgeTo")
 }
