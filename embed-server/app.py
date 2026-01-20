@@ -5,7 +5,7 @@ import uvicorn
 
 app = FastAPI(title="Semantiq Embedding Server")
 
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+model = SentenceTransformer("BAAI/bge-small-en-v1.5")
 
 app.add_middleware(
     CORSMiddleware,
