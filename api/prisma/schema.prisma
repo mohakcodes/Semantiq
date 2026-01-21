@@ -10,19 +10,11 @@ model Document {
   id Int @id @default(autoincrement())
   title String
   rawText String
+  summary String?
+  tags String[]
   createdAt DateTime @default(now())
-  chunks TextChunk[]
   nodes Node[]
   embedding  Unsupported("vector(384)")?
-}
-
-model TextChunk {
-  id Int @id @default(autoincrement())
-  document Document @relation(fields: [documentId], references: [id])
-  documentId Int
-  text String
-  aiSummary String?
-  embedding Unsupported("vector(384)")
 }
 
 model Node {
@@ -30,7 +22,8 @@ model Node {
   document Document @relation(fields: [documentId], references: [id])
   documentId Int
   label String
-  summary String?
+  summary String
+  importance Float?
   embedding Unsupported("vector(384)")?
   edgesFrom Edge[] @relation("EdgeFrom")
   edgesTo Edge[] @relation("EdgeTo")
@@ -42,6 +35,6 @@ model Edge {
   fromNodeId Int
   toNode Node @relation("EdgeTo", fields: [toNodeId], references: [id])
   toNodeId Int
-  relationship String?
-  weight Float?
+  relation String?
+  strength Float?
 }
