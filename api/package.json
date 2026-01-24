@@ -28,6 +28,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@google/genai": "^1.38.0",
     "@huggingface/inference": "^4.13.9",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
