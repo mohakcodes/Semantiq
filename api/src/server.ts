@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from 'dotenv'
 import cors from 'cors'
 
-import { ingestRouter } from "./routes/ingest.routes.js";
+import { analyzeRouter } from "./routes/analyze.routes.js";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ app.get('/', (req,res)=>{
   res.json({status: "ok", message: "Semantiq Backend Live!"})
 })
 
-app.use('/api/ingest', ingestRouter)
+app.use('/api/analyze', analyzeRouter)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
