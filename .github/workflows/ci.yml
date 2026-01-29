@@ -23,9 +23,12 @@ jobs:
               with:
                 node-version: ${{matrix.node-version}}
                 cache: 'npm'
+                cache-dependency-path: api/package-lock.json
             
             - name: Install Dependencies
+              working-directory: api
               run: npm ci
             
             - name: Run tests with coverage
+              working-directory: api
               run: npm test -- --coverage
