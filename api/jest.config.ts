@@ -21,8 +21,11 @@ const config: Config = {
 
     moduleFileExtensions: ['ts', 'js', 'json'],
     coverageDirectory: 'coverage',
+    coverageReporters: ['text', 'lcov', 'json-summary'],
+
     collectCoverageFrom: [
         'src/**/*.ts',
+        '!src/**/*.d.ts',
         '!src/**/index.ts',
         '!src/server.ts'
     ],
