@@ -30,6 +30,15 @@ const config: Config = {
         '!src/server.ts'
     ],
 
+    coverageThreshold: {
+        global: {
+            statements: 85,
+            branches: 60,
+            functions: 80,
+            lines: 85,
+        },
+    },
+
     testPathIgnorePatterns: [
         '/node_modules/',
         '/dist/',
