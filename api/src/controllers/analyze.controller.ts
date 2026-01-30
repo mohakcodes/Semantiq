@@ -99,7 +99,8 @@ export const analyzeText = async(req: Req, res: Res) => {
             RETURNING id, "label", "summary", "importance"
         `)
 
-        const nodeRecords: NodeWithEmbedding[] = inserted.map((rec, idx) => ({
+        const nodeRecords: NodeWithEmbedding[] = inserted.map(
+            (rec: NodeInsertResult, idx: number) => ({
             ...rec,
             embedding: embeddings[idx]
         }))
