@@ -20,12 +20,12 @@ export interface AnalyzeNode {
 export interface AnalyzeEdge {
     from: string;
     to: string;
-    relation: number;
+    relation: string;
     strength: number;
 }
 
 export interface AnalyzeResponse {
     document: AnalyzeDocument;
-    node: AnalyzeNode[];
+    nodes: AnalyzeNode[];
     edges: AnalyzeEdge[];
 }
