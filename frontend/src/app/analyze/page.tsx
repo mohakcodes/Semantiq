@@ -1,11 +1,64 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { analyzeText } from '@/lib/api';
+import type { AnalyzeResponse } from '@/types/analyze';
+
+import { MOCK_ANALYZE_RESPONSE } from '@/mocks/analyze.mock';
+import { SemanticGraph } from '@/components/semantic_graph/SemanticGraph';
+
 export default function AnalyzePage() {
+  const [text, setText] = useState('');
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [phase, setPhase] = useState<'idle' | 'thinking' | 'visualizing'>('idle');
+
+  const handleAnalyze = async () => {
+    if (loading) return;
+
+    if (text.trim().length < 20) {
+      setError('Please enter at least 20 characters.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setPhase('thinking');
+
+    try {
+      if (0) {
+        await new Promise((r) => setTimeout(r, 1200));
+        setResult(MOCK_ANALYZE_RESPONSE);
+        await new Promise((r) => setTimeout(r, 300));
+        setPhase('visualizing');
+      } 
+      else {
+        const res = await analyzeText({ text });
+        setResult(res);
+        setPhase('visualizing');
+        console.log('ANALYSIS RESULT:', res);
+      }
+    } 
+    catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } 
+      else {
+        setError('Analysis failed.');
+        setPhase('idle');
+      }
+    } 
+    finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="relative min-h-screen px-6 py-16 max-w-4xl mx-auto">
       <div className="absolute top-6 left-6">
@@ -27,35 +80,33 @@ export default function AnalyzePage() {
           "
         >
           <span className="text-base leading-none">←</span>
-          <span>Home Page</span>
+          <span>Home</span>
         </Link>
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.6,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="space-y-8"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="space-y-6"
       >
-        {/* Header */}
-        <header className="space-y-2 mt-3">
-          <h2 className="text-2xl font-semibold tracking-tight">
+        <header className="space-y-1 mt-3">
+          <h2 className="text-xl font-semibold tracking-tight">
             Analyze text
           </h2>
-          <p className="text-md font-semibold text-zinc-400 max-w-3xl">
+          <p className="text-sm font-semibold text-zinc-400 max-w-3xl">
             Paste raw thoughts, notes, or documents.
             Semantiq will extract concepts and reveal structure.
           </p>
         </header>
 
-        {/* Input frame */}
         <section className="relative">
           <div className="absolute inset-0 rounded-xl ring-1 ring-zinc-800/60 pointer-events-none" />
 
           <Textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            disabled={loading}
             placeholder="Start writing or paste text here…"
             className="
               relative z-10
@@ -70,6 +121,7 @@ export default function AnalyzePage() {
               border-none
               focus:ring-0
               placeholder:text-zinc-500
+              disabled:opacity-60
 
               scrollbar-thin
               scrollbar-thumb-zinc-700/60
@@ -77,25 +129,36 @@ export default function AnalyzePage() {
             "
           />
 
-          <div className="mt-2 text-xs text-zinc-500">
+          <div className="mx-1 mt-1 text-xs text-zinc-500">
             Tip: longer, messier input produces better structure.
           </div>
         </section>
 
-        {/* Action row */}
-        <div className="flex items-center justify-between pt-2">
+        {error && (
+          <div className="text-sm text-red-400">
+            {error}
+          </div>
+        )}
+
+        <div className="flex justify-end">
           <motion.div
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: loading ? 1 : 1.03 }}
+            whileTap={{ scale: loading ? 1 : 0.97 }}
           >
             <Button
               size="lg"
-              className="px-9 py-5 text-sm font-medium"
+              className="px-9 py-3 text-sm font-medium"
+              onClick={handleAnalyze}
+              disabled={loading}
             >
-              Analyze
+              {loading ? 'Analyzing…' : 'Analyze'}
             </Button>
           </motion.div>
         </div>
+
+        {phase === 'visualizing' && result && (
+          <SemanticGraph data={result} />
+        )}
       </motion.div>
     </main>
   );
