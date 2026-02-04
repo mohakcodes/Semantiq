@@ -22,7 +22,7 @@ const NO_CHAT_MODE = `
 
 async function askGemini(prompt: string): Promise<string> {
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
+        model: 'gemini-2.5-flash',
         contents: `${prompt}\n${NO_CHAT_MODE}`,
     })
 
