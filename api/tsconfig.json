@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "target": "ES2023",
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "dist",
     "skipLibCheck": true
-  },
-  "include": ["src/**/*", "src/types/**/*"]
+  }
 }
