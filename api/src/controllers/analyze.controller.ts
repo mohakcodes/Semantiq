@@ -1,6 +1,6 @@
 import axios from "axios";
-import { prisma } from "../../lib/prisma";
-import {generateMetadata, extractNodes} from '../../lib/gemini'
+import { prisma } from "../../lib/prisma.js";
+import {generateMetadata, extractNodes} from '../../lib/gemini.js'
 import dotenv from "dotenv"
 
 dotenv.config();
