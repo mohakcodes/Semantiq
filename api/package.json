@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
     "lint": "eslint . --ext .ts",
