@@ -14,6 +14,14 @@ app.get('/', (req,res)=>{
   res.json({status: "ok", message: "Semantiq Backend Live!"})
 })
 
+app.get('/health', (_req,res)=>{
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+  })
+})
+
 app.use('/api/analyze', analyzeRouter)
 
 const PORT = process.env.PORT || 5000;
