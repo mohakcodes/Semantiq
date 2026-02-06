@@ -126,8 +126,38 @@ export const analyzeText = async(req: Req, res: Res) => {
 
         const topEdges = edges.sort((a,b) => b.strength - a.strength).slice(0,10);
 
+        const perNodeTopEdges: EdgeInput[] = [];
+
+        for(const node of nodeRecords){
+            const relatedEdges = edges
+            .filter((edge) => edge.from === node.label || edge.to === node.label)
+            .sort((a,b) => b.strength - a.strength)
+            .slice(0,2);
+            perNodeTopEdges.push(...relatedEdges)
+        }
+
+        //merge both + dedupes
+        const edgeMap = new Map<string, EdgeInput>();
+
+        function edgeKey(edge: EdgeInput){
+            return [edge.from, edge.to].sort().join('|')
+        }
+
+        for(const edge of topEdges){
+            edgeMap.set(edgeKey(edge),edge)
+        }
+
+        for(const edge of perNodeTopEdges){
+            const key = edgeKey(edge);
+            if(!edgeMap.has(key)){
+                edgeMap.set(key, edge);
+            }
+        }
+
+        const mainEdges = Array.from(edgeMap.values())
+
         const edgeRecords = [];
-        for(const edge of topEdges) {
+        for(const edge of mainEdges) {
             const fromNode = nodeRecords.find((node) => node.label === edge.from)
             const toNode = nodeRecords.find((node) => node.label === edge.to)
             if(!fromNode || !toNode) continue;
