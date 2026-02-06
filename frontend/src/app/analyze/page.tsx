@@ -12,6 +12,8 @@ import type { AnalyzeResponse } from '@/types/analyze';
 import { MOCK_ANALYZE_RESPONSE } from '@/mocks/analyze.mock';
 import { SemanticGraph } from '@/components/semantic_graph/SemanticGraph';
 
+import { ThinkingLoader } from '@/components/ThinkingLoader';
+
 export default function AnalyzePage() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
@@ -33,9 +35,8 @@ export default function AnalyzePage() {
 
     try {
       if (0) {
-        await new Promise((r) => setTimeout(r, 1200));
+        await new Promise((r) => setTimeout(r, 10000));
         setResult(MOCK_ANALYZE_RESPONSE);
-        await new Promise((r) => setTimeout(r, 300));
         setPhase('visualizing');
       } 
       else {
@@ -155,6 +156,8 @@ export default function AnalyzePage() {
             </Button>
           </motion.div>
         </div>
+
+        {phase === 'thinking' && <ThinkingLoader />}
 
         {phase === 'visualizing' && result && (
           <SemanticGraph data={result} />
